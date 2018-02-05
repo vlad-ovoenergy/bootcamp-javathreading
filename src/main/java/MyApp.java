@@ -51,9 +51,32 @@ public class MyApp {
 
         });
 
+        Thread whatsInTheBucket = new Thread(() -> {
+            while (true) {
+                synchronized (bucket) {
+                    if (bucket.isEmpty()) {
+                        System.out.println("Nothing is in the bucket. Waiting ...");
+                        try {
+                            bucket.wait();
+                        } catch (InterruptedException e) {
+                            e.printStackTrace();
+                        }
+                    } else {
+                        int size = bucket.whatsInTheBucket();
+                        System.out.println("There are  " + size + " elements in the bucket");
+                    }
+
+                    bucket.notifyAll();
+
+                }
+            }
+
+        });
 
         readerThread.start();
         writerThread.start();
+        whatsInTheBucket.start();
+
 
     }
 
@@ -71,6 +94,10 @@ class Bucket {
     }
 
     public int readElement() {
+        return stack.pop();
+    }
+
+    public int whatsInTheBucket() {
         return stack.pop();
     }
 
