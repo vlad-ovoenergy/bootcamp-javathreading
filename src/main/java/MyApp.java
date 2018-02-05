@@ -98,7 +98,7 @@ class Bucket {
     }
 
     public int whatsInTheBucket() {
-        return stack.pop();
+        return stack.size();
     }
 
     public boolean isFull() {
